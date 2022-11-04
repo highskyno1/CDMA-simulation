@@ -1,0 +1,2 @@
+# CDMA-simulation
+8位16位64位等任意数量用户CDMA直接序列扩频通信系统的Matlab仿真
