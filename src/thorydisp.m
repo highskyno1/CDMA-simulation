@@ -1,51 +1,54 @@
 %{
-    Ô­ÀíÕ¹Ê¾´úÂë,ÒÔÓÃ»§2ÎªÀı
+    åŸç†å±•ç¤ºä»£ç ,ä»¥ç”¨æˆ·2ä¸ºä¾‹
 %}
 close all;
 
-user_num = 8; %ÓÃ»§Êı£¬±ØĞëÉÙÓÚ»òµÈÓÚwalshÂë½×Êı
-user_code = 1e4;    %Ã¿¸öÓÃ»§µÄÂëÔªÊı
+user_num = 8; %ç”¨æˆ·æ•°ï¼Œå¿…é¡»å°‘äºæˆ–ç­‰äºwalshç é˜¶æ•°
+user_code = 1e4;    %æ¯ä¸ªç”¨æˆ·çš„ç å…ƒæ•°
 
-walsh_order = 8;   %walshÂë½×Êı,Ò²ÊÇÀ©ÆµÔöÒæ,±ØĞëÊÇ2µÄÃİ´Î·½
+walsh_order = 8;   %walshç é˜¶æ•°,ä¹Ÿæ˜¯æ‰©é¢‘å¢ç›Š,å¿…é¡»æ˜¯2çš„å¹‚æ¬¡æ–¹
 
-carrier_freq = 1e3; %ÔØ²¨ÆµÂÊ
-SampleRate = 25*1e3; %ÔØ²¨²ÉÑùÂÊ
-SamplePoint = 25; %ÔØ²¨²ÉÑùµãÊı
+carrier_freq = 1e3; %è½½æ³¢é¢‘ç‡
+SampleRate = 25*1e3; %è½½æ³¢é‡‡æ ·ç‡
+SamplePoint = 25; %è½½æ³¢é‡‡æ ·ç‚¹æ•°
 
-%²úÉúÓÃ»§ÂëÔª
+%äº§ç”Ÿç”¨æˆ·ç å…ƒ
 userCode = genBipolar(user_num,user_code);
 
-%²úÉúWalsh¾ØÕó
+%äº§ç”ŸWalshçŸ©é˜µ
 walshCode = walsh(walsh_order);
 
-%À©Æµ
+%æ‰©é¢‘
 res_spreadSpectrum = spreadSpectrum(userCode,walshCode);
-%ÎªÁËÔ­ÀíÕ¹Ê¾£¬½øĞĞÂëÔªÀ­³¤
-disp_codeNum = 3;   %ÏÔÊ¾µÄÂëÔªÊıÁ¿
+%ä¸ºäº†åŸç†å±•ç¤ºï¼Œè¿›è¡Œç å…ƒæ‹‰é•¿
+disp_codeNum = 3;   %æ˜¾ç¤ºçš„ç å…ƒæ•°é‡
 [~,user2_code] = selfCopy(userCode(2,:),walsh_order);
 user2_spreadSpectrum = res_spreadSpectrum(2,:);
 [ssCode,~] = selfCopy(walshCode(2,:),disp_codeNum);
-%¶Ô±ÈÀ©ÆµÇ°ºóÊ±Óò
+%å¯¹æ¯”æ‰©é¢‘å‰åæ—¶åŸŸ
 figure;
 subplot(3,1,1)
 stairs(user2_code(1:walsh_order*disp_codeNum));
-set(gca,'YLim',[-2 2]); %YÖáµÄÊı¾İÏÔÊ¾·¶Î§
-title('À©ÆµÇ°')
+set(gca,'YLim',[-2 2]); %Yè½´çš„æ•°æ®æ˜¾ç¤ºèŒƒå›´
+title('æ‰©é¢‘å‰')
 subplot(3,1,2)
 stairs(ssCode);
-set(gca,'YLim',[-2 2]); %YÖáµÄÊı¾İÏÔÊ¾·¶Î§
-title('À©ÆµÂë')
+set(gca,'YLim',[-2 2]); %Yè½´çš„æ•°æ®æ˜¾ç¤ºèŒƒå›´
+title('æ‰©é¢‘ç ')
 subplot(3,1,3)
 stairs(user2_spreadSpectrum(1:walsh_order*disp_codeNum));
-title('À©Æµºó')
-set(gca,'YLim',[-2 2]); %YÖáµÄÊı¾İÏÔÊ¾·¶Î§
+title('æ‰©é¢‘å')
+set(gca,'YLim',[-2 2]); %Yè½´çš„æ•°æ®æ˜¾ç¤ºèŒƒå›´
 
-%»æÖÆÀ©Æµ¶Ô±ÈÆµÆ×Í¼
-%¼ÆËã²»À©ÆµµÄµ÷ÖÆ½á¹û
+%ç”Ÿæˆè½½æ³¢
+carrier = carrierGen(carrier_freq,SampleRate,SamplePoint);
+
+%ç»˜åˆ¶æ‰©é¢‘å¯¹æ¯”é¢‘è°±å›¾
+%è®¡ç®—ä¸æ‰©é¢‘çš„è°ƒåˆ¶ç»“æœ
 res_unSS = modulate(user2_code,carrier);
-%¼ÆËãÀ©ÆµµÄµ÷ÖÆ½á¹û
+%è®¡ç®—æ‰©é¢‘çš„è°ƒåˆ¶ç»“æœ
 res_SS = modulate(user2_spreadSpectrum,carrier);
-%ÆµÆ×·ÖÎö
+%é¢‘è°±åˆ†æ
 fft_unSS = abs(fft(res_unSS));
 fft_SS = abs(fft(res_SS));
 fft_size = length(fft_unSS) / 2;
@@ -54,18 +57,18 @@ figure;
 plot(fft_x,fft_unSS(1:fft_size));
 hold on
 plot(fft_x,fft_SS(1:fft_size));
-title('À©ÆµÇ°ºóÆµÆ×¶Ô±ÈÍ¼');
-legend('À©ÆµÇ°','À©Æµºó');
+title('æ‰©é¢‘å‰åé¢‘è°±å¯¹æ¯”å›¾');
+legend('æ‰©é¢‘å‰','æ‰©é¢‘å');
 
-%À©ÆµºóµÄÂëÔªÏà¼Ó
+%æ‰©é¢‘åçš„ç å…ƒç›¸åŠ 
 res_overlay = overlay(res_spreadSpectrum);
 
-%Éú³ÉÔØ²¨
+%ç”Ÿæˆè½½æ³¢
 carrier = carrierGen(carrier_freq,SampleRate,SamplePoint);
 
-%µ÷ÖÆ
+%è°ƒåˆ¶
 send = modulate(res_overlay,carrier);
-%¶Ô±Èµ÷ÖÆÇ°ºóµÄ½á¹û
+%å¯¹æ¯”è°ƒåˆ¶å‰åçš„ç»“æœ
 user = [-1,0,1];
 user_modu = modulate(user,carrier);
 [~,user_show] = selfCopy(user,length(carrier));
@@ -73,29 +76,29 @@ user_modu = modulate(user,carrier);
 figure;
 subplot(3,1,1);
 stairs(user_show);
-set(gca,'YLim',[-2 2]); %YÖáµÄÊı¾İÏÔÊ¾·¶Î§
-title('µ÷ÖÆÇ°')
+set(gca,'YLim',[-2 2]); %Yè½´çš„æ•°æ®æ˜¾ç¤ºèŒƒå›´
+title('è°ƒåˆ¶å‰')
 subplot(3,1,2);
 plot(carrier_show);
-title('ÔØ²¨')
+title('è½½æ³¢')
 subplot(3,1,3);
 plot(user_modu);
-title('µ÷ÖÆºó')
+title('è°ƒåˆ¶å')
 
-%µ±Ç°ĞÅÔë±È
+%å½“å‰ä¿¡å™ªæ¯”
 snr = 20;
 
-%¼ÓÔë
+%åŠ å™ª
 receive = awgn(send,snr,powerCnt(carrier));
 
-%½âµ÷(Ïà¸É½âµ÷)
+%è§£è°ƒ(ç›¸å¹²è§£è°ƒ)
 res_demodulate = demodulate(receive,carrier);
 
-%½âÀ©
+%è§£æ‰©
 res_deSpreadSpectrum = deSpreadSpectrum(res_demodulate,walshCode,user_num);
 
-%ÂëÔªÅĞ¾ö
+%ç å…ƒåˆ¤å†³
 res_codeJudge = codeJudge(res_deSpreadSpectrum,walsh_order);
 
-%¼ÆËãÎóÂëÂÊ
+%è®¡ç®—è¯¯ç ç‡
 error_rate = 1 - compare(res_codeJudge,userCode);
