@@ -13,13 +13,10 @@ res_std = std(res_arrayGroupSum);
 %计算平均数
 res_mean = mean(res_arrayGroupSum);
 %解算阈值
-syms temp;
-%以下计算时会有一个"Unable to solve symbolically. Returning a numeric solution using
-%vpasolve"的警告,让系统不显示
-warning off;
-threshhold_negative = double(solve(normcdf(temp,res_mean,res_std)==1/3));
+%计算概率为1/3时的阈值，也就是判决为-1的阈值
+threshhold_negative = norminv(1/3,res_mean,res_std);
 %计算概率为2/3时的阈值，也就是判决为1的阈值
-threshhold_postive = double(solve(normcdf(temp,res_mean,res_std)==2/3));
+threshhold_postive = norminv(2/3,res_mean,res_std);
 res = zeros(1,length(res_arrayGroupSum));
 for i = 1:length(res_arrayGroupSum)
     if res_arrayGroupSum(i) > threshhold_postive

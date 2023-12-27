@@ -2,9 +2,9 @@
     本程序用于多用户CDMA通信系统仿真,同时引入了对多径衰落的模拟，采用Walsh码作为扩频码
 传输过程使用BPSK调制。
 %}
-close all;
+% close all;
 user_num = 8; %用户数，必须少于或等于walsh码阶数
-user_code = 1e4;    %每个用户的码元数
+user_code = 1e5;    %每个用户的码元数
 
 walsh_order = 8;   %walsh码阶数,也是扩频增益,必须是2的幂次方
 
@@ -37,6 +37,8 @@ walshCode = walsh(walsh_order);
 foo = spreadSpectrum(foo,walshCode);
 
 %扩频后的码元相加
+%!!接收端收到的是调制后叠加的多个信号，为了减少内存开销，先叠加再调制，
+%实际应该先调制再叠加，但在仿真中这是等效的)
 foo = overlay2(foo);
 
 %生成载波
